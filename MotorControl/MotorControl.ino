@@ -1,3 +1,7 @@
+###  The final product is going to be a telerobot controlled through VHF frequencies, or potentially loRa, 
+###that can gather information on nearby devices using an RTL-SDR and report it back to a control station. Today.
+###I started early work on the motor drivers, wiring up a test circuit and beginning to write code to drive them.
+
 class MotorControl {
 public:
   // Constructor
