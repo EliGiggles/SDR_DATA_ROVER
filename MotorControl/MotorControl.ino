@@ -1,7 +1,8 @@
-###  The final product is going to be a telerobot controlled through VHF frequencies, or potentially loRa, 
-###that can gather information on nearby devices using an RTL-SDR and report it back to a control station. Today.
-###I started early work on the motor drivers, wiring up a test circuit and beginning to write code to drive them.
-
+/*  
+I manage to get the motor Driver software working, and control the speed, as well as making it, go forward and backwards, 
+but I still have a few bugs to work out, namely, that the motors will keep going when they're not supposed to. 
+I think I might know how to fix that though. Additionally, the wiring on the motors needs another pass.
+*/
 class MotorControl {
 public:
   // Constructor
@@ -36,28 +37,36 @@ void MotorControl::begin() {
 void MotorControl::update(signed int direction) {
   // Main loop code here (like in Arduino's loop())
   // This method can be called repeatedly
- _direction = (direction);
-if (_direction > 0) {
-  analogWrite(_first_pin, _direction *16);
+ _direction = map(direction, 0, 128, 0, 256);
+if (_direction > 0){
+analogWrite(_first_pin, _direction);
+analogWrite(_second_pin, 0);
 }
-if (_direction < 0) {
-  analogWrite(_second_pin, _direction * -16);
+if (_direction < 0){
+analogWrite(_second_pin, _direction);
+analogWrite(_first_pin, 0);
 }
-else {
-  analogWrite(_first_pin, 0);
-  analogWrite(_second_pin, 0);
+if (_direction == 0){
+analogWrite(_second_pin, 0);
+analogWrite(_first_pin, 0);
 }
 }
-
-MotorControl Motor1(4,3);
+MotorControl Motor1(5,3);
 
 void setup() {
 Motor1.begin();
-pinMode(9, OUTPUT);
+
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-analogWrite(9, 128);
-  
+for (int i = 0; i < 256; ++ i) {
+Motor1.update(i);
+  delay(10);
+}
+delay(1000);
+for (int i = 0; i > -256; -- i) {
+Motor1.update(i);
+  delay(10);
+}
 }
