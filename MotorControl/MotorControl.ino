@@ -5,7 +5,7 @@ public:
   
   // Public methods
   void begin();
-  void update(signed int direction, unsigned long time);
+  void update(signed int direction);
   void doSomething();
   int getValue();
   void setValue(int value);
@@ -16,7 +16,6 @@ private:
   int _first_pin;
   int _second_pin;
   signed int _direction;
-  unsigned long _time;
 
 };
 
@@ -30,22 +29,31 @@ void MotorControl::begin() {
 }
 
 
-void MotorControl::update(signed int direction, unsigned long time) {
+void MotorControl::update(signed int direction) {
   // Main loop code here (like in Arduino's loop())
   // This method can be called repeatedly
- _time = (time);
  _direction = (direction);
-
+if (_direction > 0) {
+  analogWrite(_first_pin, _direction *16);
+}
+if (_direction < 0) {
+  analogWrite(_second_pin, _direction * -16);
+}
+else {
+  analogWrite(_first_pin, 0);
+  analogWrite(_second_pin, 0);
+}
 }
 
-MotorControl Motor1(3,5);
+MotorControl Motor1(4,3);
 
 void setup() {
 Motor1.begin();
+pinMode(9, OUTPUT);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  unsigned long currentMillis = millis();
+analogWrite(9, 128);
   
 }
